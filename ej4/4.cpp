@@ -34,14 +34,14 @@ int main() {
 		if (!visited[i]) ciclos.push_back(calcularciclo(i, perm, visited));
 	}
 
-	//Si hay un ciclo par, la exppuesta es 0. Si no, es el mcd de todos con todos o algo así
+	//Si hay un ciclo par, la respuesta es 0. Si no, es el mcd de todos con todos o algo así
 	int exp = 0;
 	for (int i = 0; i < ciclos.size(); i++) {
 		if (ciclos[i] % 2 == 0) {
 			cout << 0 << endl;
 			return 0;
 		}
-		exp += i / 2; //WTF con esto anda
+		exp += ciclos[i] / 2; 
 		for (int j = i + 1; j < ciclos.size(); j++) {
 			exp += mcd(ciclos[i], ciclos[j]);
 		}

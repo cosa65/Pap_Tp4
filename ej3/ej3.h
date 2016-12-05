@@ -157,25 +157,24 @@ bool convexo(Triangulo &t1, Triangulo t2)
 {
 	VectorDirector v = VectorDirector(t1[1], t1[2]);
 	VectorDirector u = VectorDirector(t1[1], t2[1]);
-	return v*u > 0;  
+	return v*u >= 0;  
 }
 
 void formar_poligono(Triangulo &actual, set<Triangulo>::iterator itSiguiente, set <Triangulo, SentidoAntihorario> &triangulos_antihorario, map <Triangulo, int> &poligonos)
 {
 	int res = 0;
 	Triangulo tri_actual = actual;
-	for (set<Triangulo>::iterator myIt = itSiguiente; itSiguiente != triangulos_antihorario.end(); itSiguiente++){
 
-		if(actual[0] == (*myIt)[0] && actual[1] == (*myIt)[2] && convexo) //dado que cada punto esta en sentido horario primero me fijo que tengan un lado en comun 
+	for (set<Triangulo>::iterator myIt = itSiguiente; myIt != triangulos_antihorario.end(); myIt++){
+
+		if(actual[0] == (*myIt)[0] && actual[1] == (*myIt)[2]) //dado que cada punto esta en sentido horario primero me fijo que tengan un lado en comun 
 		{
-			if(convexo(actual, *myIt))
+			if(convexo(tri_actual, *myIt))
 			{
-				actual = *myIt;//para seguir agrandando el poligono
+				tri_actual = *myIt;//para seguir agrandando el poligono
 				res++; // incremente en uno ya solo hay un nuevo punto, ya que compartian un lado
 			}
 		}
-		else
-			break; //ya no puedo seguir expandiendo el poligono
 	}
 	poligonos[actual]+= res; 
 

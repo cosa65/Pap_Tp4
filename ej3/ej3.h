@@ -88,6 +88,8 @@ double angulo_formado_por(Punto origen, Punto p1, Punto p2) {
 	VectorDirector d1 = VectorDirector(origen, p1);
 	VectorDirector d2 = VectorDirector(origen, p2);
 
+	if (sqrt((d1 * d1) * (d2 * d2)) == 0) return M_PI/2.0;
+
 	return acos(coseno_entre_vectores(d1, d2));
 }
 
@@ -119,39 +121,47 @@ void cant_historicos_protegidos(vector<Punto> &historicos, map<Punto, vector<pai
 void formar_triangulo(Triangulo &abc, Punto &a, Punto &p1, Punto &p2){// al triangulo lo quiero en sentido horario
 
 	abc.push_back(a);//se que el primero es el que tiene la x mas a la izquierda
-	Punto vector_origen = {a.x, a.y + 10};
-	double ang_p1 = angulo_formado_por(a, vector_origen, p1);
-	double ang_p2 = angulo_formado_por(a, vector_origen, p2);
+	Punto origen = {0, 0};
 
-	if (ang_p1 < ang_p2){
+	Punto d1 = {p1.x - a.x, p1.y - a.y};
+	Punto d2 = {p2.x - a.x, p2.y - a.y};
+
+	double ang_p1 = atan2(d1.y, d1.x);
+	double ang_p2 = atan2(d2.y, d2.x);
+
+	if (ang_p1 > ang_p2){
 		abc.push_back(p1);
 		abc.push_back(p2);
-	}
-	else {
+	} else {
 		abc.push_back(p2);
 		abc.push_back(p1);
 	}
 }
 
-struct SentidoAntihorario 
+struct SentidoAntihorario
 {
-	bool operator() (const Triangulo& t1, const Triangulo& t2 ) const{
+	bool operator() (const Triangulo& t1, const Triangulo& t2) const {
 
-		Punto origen = t1[0]; //ambos tienen el mismo oriden difiieren en los otros puntos
-		Punto vector_origen = {origen.x, origen.y - 10};
-		double ang_p1 = angulo_formado_por(origen, vector_origen, t1[1]);
-		double ang_p2 = angulo_formado_por(origen, vector_origen, t2[1]);
+		Punto origen = t1[0]; //ambos tienen el mismo origen difieren en los otros puntos
+		Punto vector_origen = {origen.x, origen.y};
 
-		if (ang_p1 == ang_p2)
-		{
-			ang_p1 = angulo_formado_por(origen, vector_origen, t1[2]);
-			ang_p2 = angulo_formado_por(origen, vector_origen, t2[2]);
+		Punto d1 = {t1[1].x - origen.x, t1[1].y - origen.y};
+		Punto d2 = {t2[1].x - origen.x, t2[1].y - origen.y};		
+
+		double ang_p1 = atan2(d1.y, d1.x);
+		double ang_p2 = atan2(d2.y, d2.x);
+
+		if (ang_p1 == ang_p2) {
+			Punto d1 = {t1[2].x - origen.x, t1[2].y - origen.y};
+			Punto d2 = {t2[2].x - origen.x, t2[2].y - origen.y};		
+
+			ang_p1 = atan2(d1.y, d1.x);
+			ang_p2 = atan2(d2.y, d2.x);
 		}
 		
 		return ang_p1 < ang_p2;			
 	}
 };
-		//	formar_poligono(actual, sit, triangulos_antihorario, poligonos);
 
 bool convexo(Triangulo &t1, Triangulo t2)
 {

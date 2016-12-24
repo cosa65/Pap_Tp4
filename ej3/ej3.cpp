@@ -31,7 +31,7 @@ int main() {
 		cin >> enemigos[i].x >> enemigos[i].y;
 	}
 	//Idea: similar al punto A descomponer el poligono en triangulos y luego irme armando un poligono maximo a partir de todos los posibles triangulos
-	vector<Punto> historicos(setHistoricos.begin(), setHistoricos.end());//conviene que ester ordenados en orden ascendente segun el eje x
+	vector<Punto> historicos(setHistoricos.begin(), setHistoricos.end());//conviene que esten ordenados en orden ascendente segun el eje x
 	map<Punto, vector<pair<Triangulo, int> > > triangulos;//dado un punto guardo los triangulos que empiezan con ese punto y ademas por cada
 	//triangulo tengo cuantos edificios historicos protege
 	map<Triangulo,int>::iterator it;
@@ -50,7 +50,7 @@ int main() {
 				if (noEnemigosDentro(abc, enemigos)){
 
 					it_triangulos = triangulos.find(historicos[i]);
-					pair<Triangulo, int>  nuevo_triangulo(abc,0);//hay unu nuevo triangulo que agregar
+					pair<Triangulo, int>  nuevo_triangulo(abc,0);//hay un nuevo triangulo que agregar
         			
         			if (it_triangulos != triangulos.end()) //me fijo si el punto donde empieza el triangulo ya esta en el dicc
             			triangulos[historicos[i]].push_back(nuevo_triangulo);
@@ -76,7 +76,7 @@ int main() {
 			cout << 0 << endl;// no hay nada que proteger 
 		return 0;
 	}
-	//formo los subgrupos apartir de los puntos inicios que tengo en triangulos
+	//formo los subgrupos a partir de los puntos inicios que tengo en triangulos
 
 	int max_protegidos = 0;
 	for (map<Punto, vector<pair<Triangulo, int> > >::iterator myIt = triangulos.begin(); myIt!=triangulos.end(); ++myIt)
@@ -85,24 +85,21 @@ int main() {
 
 		for (int i = 0; i < myIt->second.size(); ++i)
 		{//voy a ver cuantos historicos protejo a partir de los triangulos que ya tenia pero uniendole otros para formar un poligono convexo
-			poligonos[myIt->second[i].first] = myIt->second[i].second;
+			poligonos[myIt->second[i].first] = myIt->second[i].second - 2;
 		}
 
 		set <Triangulo, SentidoAntihorario> triangulos_antihorario; 
 		for (int i = 0; i < myIt->second.size(); ++i) //voy a ordenar los triangulos para saber para cada uno cual le puedo unir
 			triangulos_antihorario.insert(myIt->second[i].first);
 
-		for (set<Triangulo>::iterator sit = triangulos_antihorario.begin() ; sit != triangulos_antihorario.end(); )
+		for (set<Triangulo>::iterator sit = triangulos_antihorario.begin() ; sit != triangulos_antihorario.end(); sit++)
 		{//voy a empezar a unirlos tomo uno y luego veo cual le sigue y asi
 
-			Triangulo actual = *sit; sit++;
+			Triangulo actual = *sit;
 			formar_poligono(actual, sit, triangulos_antihorario, poligonos);
 		}
-
 		max_protegidos = max(max_protegidos, maximo_value(poligonos));
-
 	}
-
-	cout << max_protegidos << endl;
+	cout << max_protegidos + 2 << endl;
 	return 0;
 }

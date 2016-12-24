@@ -165,24 +165,24 @@ struct SentidoAntihorario
 
 bool convexo(Triangulo &t1, Triangulo t2)
 {
-	VectorDirector v = VectorDirector(t1[1], t1[2]);
-	VectorDirector u = VectorDirector(t1[1], t2[1]);
-	return v*u >= 0;  
+	VectorDirector v = VectorDirector(t1[2], t1[1]);
+	VectorDirector u = VectorDirector(t2[1], t2[2]);
+	return u.x*v.y - u.y*v.x <= 0;
 }
 
 void formar_poligono(Triangulo &actual, set<Triangulo>::iterator itSiguiente, set <Triangulo, SentidoAntihorario> &triangulos_antihorario, map <Triangulo, int> &poligonos)
 {
 	int res = 0;
-	Triangulo tri_actual = actual;
+	Triangulo tri_actual = Triangulo(actual);
 
-	for (set<Triangulo>::iterator myIt = itSiguiente; myIt != triangulos_antihorario.end(); myIt++){
+	for (set<Triangulo>::iterator myIt = triangulos_antihorario.begin(); myIt != triangulos_antihorario.end(); myIt++) {
 
-		if(actual[0] == (*myIt)[0] && actual[1] == (*myIt)[2]) //dado que cada punto esta en sentido horario primero me fijo que tengan un lado en comun 
+		if(actual[0] == (*myIt)[0] && actual[2] == (*myIt)[1]) //dado que cada punto esta en sentido horario primero me fijo que tengan un lado en comun
 		{
 			if(convexo(tri_actual, *myIt))
 			{
-				tri_actual = *myIt;//para seguir agrandando el poligono
-				res++; // incremente en uno ya solo hay un nuevo punto, ya que compartian un lado
+
+				res = max(res, poligonos[*myIt]);
 			}
 		}
 	}

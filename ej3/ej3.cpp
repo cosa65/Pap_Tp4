@@ -68,10 +68,10 @@ int main() {
 	if(triangulos.empty())
 	{
 		if (historicos.size() > 0)
-			if (existe_recta(historicos, enemigos))// no puedo formar un poligo veo si puedo una recta
+			if (historicos.size() > 1)// no puedo formar un poligono pero si una recta
 				cout << 2 << endl;
 			else
-				cout << 1 << endl;//hay edificios pero no puedo formar ni un triangulo ni rectas, solo protejo un punto
+				cout << 1 << endl;//hay un solo edificio protego ese
 		else
 			cout << 0 << endl;// no hay nada que proteger 
 		return 0;
@@ -96,7 +96,7 @@ int main() {
 		{//voy a empezar a unirlos tomo uno y luego veo cual le sigue y asi
 
 			Triangulo actual = *sit;
-			formar_poligono(actual, sit, triangulos_antihorario, poligonos);
+			formar_poligono(actual, triangulos_antihorario, poligonos);
 		}
 		max_protegidos = max(max_protegidos, maximo_value(poligonos));
 	}

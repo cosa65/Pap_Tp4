@@ -170,7 +170,7 @@ bool convexo(Triangulo &t1, Triangulo t2)
 	return u.x*v.y - u.y*v.x <= 0;
 }
 
-void formar_poligono(Triangulo &actual, set<Triangulo>::iterator itSiguiente, set <Triangulo, SentidoAntihorario> &triangulos_antihorario, map <Triangulo, int> &poligonos)
+void formar_poligono(Triangulo &actual, set <Triangulo, SentidoAntihorario> &triangulos_antihorario, map <Triangulo, int> &poligonos)
 {
 	int res = 0;
 	Triangulo tri_actual = Triangulo(actual);
@@ -181,7 +181,6 @@ void formar_poligono(Triangulo &actual, set<Triangulo>::iterator itSiguiente, se
 		{
 			if(convexo(tri_actual, *myIt))
 			{
-
 				res = max(res, poligonos[*myIt]);
 			}
 		}
@@ -198,38 +197,4 @@ int maximo_value(map <Triangulo, int> &poligonos){
 		res = max(res, myIt->second);
 	}
 	return res;
-}
-
-bool existe_recta(vector<Punto> &historicos, vector<Punto> &enemigos){
-
-	double m,b;
-	for (int i = 0; i < historicos.size(); ++i)
-	{
-		for (int j = i+1; j < historicos.size(); ++j)
-		{
-			int e;
-			double den = historicos[j].x - historicos[i].x; 
-			if (den != 0){
-				m = (historicos[j].y - historicos[i].y)/den;
-				b = historicos[i].y - m*historicos[i].x;
-			}
-
-			for (e = 0; e < enemigos.size(); ++e){
-
-				if (den != 0){
-					if (enemigos[e].y == m*enemigos[e].x + b) 
-						break;
-				}
-				else
-				{
-					if (historicos[i].x == enemigos[e].x)
-						break;
-				}
-			}
-
-			if (e == enemigos.size())//ningun punto enemigo cae en la recta
-				return true;
-		}
-	}
-	return false;
 }
